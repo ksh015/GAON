@@ -5,7 +5,7 @@
   var KIND = window.SHELL_KIND === 'admin' ? 'admin' : 'staff';
   var APP_URL = KIND === 'admin' ? C.adminUrl : C.staffUrl;
   var KEY = 'gaon_shell_' + KIND + '_';
-  var BASE = new URL('../', location.href).href;          // .../GAON/
+  var BASE = new URL('./', (document.currentScript && document.currentScript.src) || new URL('../', location.href).href).href; // .../GAON/
   var messaging = null, swReg = null, TOKEN = '';
 
   function $(id) { return document.getElementById(id); }
@@ -52,6 +52,7 @@
     return navigator.serviceWorker.register(BASE + 'firebase-messaging-sw.js', { scope: BASE }).then(function (reg) {
       swReg = reg;
       setStat('sw', '등록됨');
+      log('푸시 담당 등록됨: ' + reg.scope);
       try {
         if (!firebase.apps.length) firebase.initializeApp(C.firebase);
         if (firebase.messaging.isSupported && !firebase.messaging.isSupported()) { setStat('token', '이 브라우저는 푸시 미지원'); return; }
@@ -64,7 +65,7 @@
         });
         if (Notification.permission === 'granted') return getToken();
       } catch (err) { setStat('token', '오류: ' + err.message); }
-    }).catch(function (err) { setStat('sw', '실패: ' + err.message); });
+    }).catch(function (err) { setStat('sw', '실패: ' + err.message); log('푸시 담당 등록 실패: ' + err.message); });
   }
 
   function getToken() {
@@ -82,11 +83,16 @@
 
   function askPermission() {
     if (!('Notification' in window)) { alert(isIOS() ? '아이폰은 홈 화면에 추가한 앱에서만 알림을 켤 수 있어요.' : '이 브라우저는 알림을 지원하지 않아요.'); return; }
-    Notification.requestPermission().then(function (p) {
+    var done = false;
+    function after(p) {
+      if (done) return; done = true;
+      log('알림 권한 결과: ' + p);
       refreshStatus();
       if (p === 'granted') getToken();
-      else alert('알림이 허용되지 않았어요. 폰 설정에서 이 앱의 알림을 켜 주세요.');
-    });
+      else alert('알림이 허용되지 않았어요(' + p + '). 폰 설정 > 앱 > GAON# > 알림을 켜 주세요.');
+    }
+    var r = Notification.requestPermission(after);
+    if (r && r.then) r.then(after);
   }
 
   // ---------- 시험 패널 ----------
@@ -112,12 +118,30 @@
     (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function () { alert('토큰을 복사했어요.'); }).catch(function () { $('tokenBox').select(); document.execCommand('copy'); alert('토큰을 복사했어요.'); });
   };
   $('localBtn').onclick = function () {
-    if (!swReg || Notification.permission !== 'granted') { alert('먼저 [알림 허용]을 눌러 주세요.'); return; }
-    swReg.showNotification('GAON# 시험 알림', { body: '이 알림이 보이면 폰 알림 표시는 정상이에요.', icon: BASE + 'icons/icon-192.png' });
-    log('폰 자체 시험 알림 표시');
+    refreshStatus();
+    if (!('Notification' in window)) { alert('이 브라우저는 알림을 지원하지 않아요.'); return; }
+    if (Notification.permission !== 'granted') {
+      alert('알림 권한이 "' + ({ denied: '거부됨', 'default': '아직 안 물어봄' }[Notification.permission] || Notification.permission) + '" 상태예요.\n' +
+        (Notification.permission === 'denied' ? '폰 설정 > 앱 > GAON# > 알림을 켜 주세요.' : '[알림 허용]을 다시 눌러 주세요.'));
+      return;
+    }
+    getReg().then(function (reg) {
+      if (!reg) { alert('푸시 담당 등록에 실패했어요.\n상태: ' + $('st_sw').textContent); return; }
+      return reg.showNotification('GAON# 시험 알림', { body: '이 알림이 보이면 폰 알림 표시는 정상이에요.', icon: BASE + 'icons/icon-192.png' })
+        .then(function () { log('폰 자체 시험 알림 표시'); });
+    }).catch(function (err) { alert('알림 표시 실패: ' + err.message); log('알림 표시 실패: ' + err.message); });
   };
+  function getReg() {
+    if (swReg) return Promise.resolve(swReg);
+    if (!('serviceWorker' in navigator)) return Promise.resolve(null);
+    return navigator.serviceWorker.getRegistration(BASE).then(function (r) {
+      if (r) { swReg = r; return r; }
+      return initPush().then(function () { return swReg; });
+    });
+  }
   $('reloadBtn').onclick = function () { $('panel').classList.remove('on'); $('splash').classList.remove('hide'); frame.src = APP_URL; };
 
+  log('시작: ' + location.href);
   refreshStatus();
   if (store('token')) $('tokenBox').value = store('token');
   initPush();
