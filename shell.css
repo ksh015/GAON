@@ -1,0 +1,29 @@
+html, body { margin:0; padding:0; height:100%; background:#fff; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color:#111; }
+#app { position:fixed; inset:0; width:100%; height:100%; border:0; background:#fff; }
+
+#splash { position:fixed; inset:0; z-index:10; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .3s; padding:24px; box-sizing:border-box; text-align:center; }
+#splash.hide { opacity:0; pointer-events:none; }
+#splash img { width:180px; height:180px; object-fit:contain; }
+#splashMsg { color:#888; font-size:14px; font-weight:700; }
+.spin { width:28px; height:28px; border:3px solid #e5e5e5; border-top-color:#111; border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+#iosTip { display:none; position:fixed; left:12px; right:12px; bottom:calc(84px + env(safe-area-inset-bottom)); z-index:20; background:#111; color:#fff; border-radius:14px; padding:14px 40px 14px 16px; font-size:14px; font-weight:700; line-height:1.5; box-shadow:0 6px 20px rgba(0,0,0,.3); }
+#iosTip.on { display:block; }
+#iosTipClose { position:absolute; top:6px; right:6px; width:32px; height:32px; border:0; background:none; color:#fff; font-size:20px; }
+
+#testBtn { position:fixed; right:10px; bottom:calc(76px + env(safe-area-inset-bottom)); z-index:15; border:0; border-radius:20px; background:rgba(17,17,17,.55); color:#fff; font-size:12px; font-weight:800; padding:7px 12px; }
+
+#panel { display:none; position:fixed; inset:0; z-index:30; background:rgba(0,0,0,.4); align-items:flex-end; }
+#panel.on { display:flex; }
+.sheet { width:100%; max-height:88%; overflow:auto; background:#fff; border-radius:18px 18px 0 0; padding:18px 16px calc(18px + env(safe-area-inset-bottom)); box-sizing:border-box; }
+.sheet h2 { margin:0 0 12px; font-size:18px; display:flex; justify-content:space-between; align-items:center; }
+.sheet h2 button { border:0; background:none; font-size:24px; width:36px; height:36px; }
+.kv { display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid #eee; font-size:13px; font-weight:700; }
+.kv span:last-child { text-align:right; color:#444; }
+.btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:14px 0; }
+.btns button { border:0; border-radius:10px; background:#111; color:#fff; font-weight:700; font-size:14px; padding:12px 6px; }
+.btns button.gray { background:#888; }
+textarea { width:100%; box-sizing:border-box; height:70px; font-size:11px; border:1px solid #ddd; border-radius:10px; padding:8px; }
+.mini { color:#888; font-size:12px; font-weight:700; margin:10px 0 6px; }
+#logBox { white-space:pre-wrap; font-size:11px; color:#555; background:#f4f4f4; border-radius:10px; padding:10px; min-height:60px; max-height:160px; overflow:auto; }

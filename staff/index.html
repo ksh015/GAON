@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="GAON#">
+<title>GAON#</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="stylesheet" href="../shell.css">
+</head>
+<body>
+<iframe id="app" title="GAON#" allow="camera; microphone; clipboard-write; autoplay; fullscreen; screen-wake-lock"></iframe>
+
+<div id="splash">
+  <img src="../icons/icon-512.png" alt="GAON#">
+  <div class="spin"></div>
+  <div id="splashMsg">불러오는 중...</div>
+</div>
+
+<div id="iosTip">
+  알림을 받으려면 아래 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b>를 누르고, 홈 화면의 <b>GAON#</b> 아이콘으로 열어 주세요.
+  <button id="iosTipClose" aria-label="닫기">×</button>
+</div>
+
+<button id="testBtn">시험</button>
+
+<div id="panel">
+  <div class="sheet">
+    <h2>푸시 시험 <button id="panelClose" aria-label="닫기">×</button></h2>
+    <div class="kv"><span>앱 종류</span><span id="st_kind">-</span></div>
+    <div class="kv"><span>실행 방식</span><span id="st_mode">-</span></div>
+    <div class="kv"><span>알림 권한</span><span id="st_perm">-</span></div>
+    <div class="kv"><span>푸시 담당(서비스 워커)</span><span id="st_sw">-</span></div>
+    <div class="kv"><span>푸시 토큰</span><span id="st_token">-</span></div>
+    <div class="kv"><span>껍데기 저장소</span><span id="st_store">-</span></div>
+    <div class="btns">
+      <button id="permBtn">알림 허용</button>
+      <button id="localBtn">폰 알림 시험</button>
+      <button id="copyBtn">토큰 복사</button>
+      <button id="reloadBtn" class="gray">앱 새로고침</button>
+    </div>
+    <div class="mini">푸시 토큰 (Firebase 시험 발송에 붙여 넣기)</div>
+    <textarea id="tokenBox" readonly></textarea>
+    <div class="mini">기록</div>
+    <div id="logBox"></div>
+  </div>
+</div>
+
+<script>window.SHELL_KIND = 'staff';</script>
+<script src="../config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+<script src="../shell.js"></script>
+</body>
+</html>
