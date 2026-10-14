@@ -17,9 +17,13 @@ self.addEventListener('notificationclick', function (e) {
   if (url.indexOf(self.registration.scope) !== 0) url = new URL('./staff/', self.registration.scope).href;
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+      var path = new URL(url).pathname;
       for (var i = 0; i < list.length; i++) {
         var c = list[i];
-        if (c.url.indexOf(new URL(url).pathname) !== -1 && 'focus' in c) return c.focus();
+        if (new URL(c.url).pathname.indexOf(path) === 0 && 'focus' in c) {
+          c.postMessage({ gaon: 'open', url: url });
+          return c.focus();
+        }
       }
       return self.clients.openWindow(url);
     })
@@ -41,7 +45,7 @@ messaging.onBackgroundMessage(function (payload) {
   return self.registration.showNotification(d.title || 'GAON#', {
     body: d.body || '',
     icon: './icons/icon-192.png',
-    badge: './icons/icon-192.png',
+    badge: './icons/badge-96.png',
     data: { url: d.url || '' }
   });
 });
