@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
-<link rel="stylesheet" href="../shell.css">
+<link rel="stylesheet" href="../shell.css?v=3">
 </head>
 <body>
 <iframe id="app" title="GAON#(대표)" allow="camera; microphone; clipboard-write; autoplay; fullscreen; screen-wake-lock"></iframe>
@@ -28,34 +28,22 @@
   <button id="iosTipClose" aria-label="닫기">×</button>
 </div>
 
-<button id="testBtn">시험</button>
-
-<div id="panel">
+<div id="pushSheet">
   <div class="sheet">
-    <h2>푸시 시험 <button id="panelClose" aria-label="닫기">×</button></h2>
-    <div class="kv"><span>앱 종류</span><span id="st_kind">-</span></div>
-    <div class="kv"><span>실행 방식</span><span id="st_mode">-</span></div>
-    <div class="kv"><span>알림 권한</span><span id="st_perm">-</span></div>
-    <div class="kv"><span>푸시 담당(서비스 워커)</span><span id="st_sw">-</span></div>
-    <div class="kv"><span>푸시 토큰</span><span id="st_token">-</span></div>
-    <div class="kv"><span>껍데기 저장소</span><span id="st_store">-</span></div>
-    <div class="btns">
-      <button id="permBtn">알림 허용</button>
-      <button id="localBtn">폰 알림 시험</button>
-      <button id="copyBtn">토큰 복사</button>
-      <button id="reloadBtn" class="gray">앱 새로고침</button>
-    </div>
-    <div class="mini">푸시 토큰 (Firebase 시험 발송에 붙여 넣기)</div>
-    <textarea id="tokenBox" readonly></textarea>
-    <div class="mini">기록</div>
-    <div id="logBox"></div>
+    <img src="../icons/icon-192.png" alt="">
+    <h2>알림 켜기</h2>
+    <p id="pushMsg"></p>
+    <button id="pushOn" class="go">알림 켜기</button>
+    <button id="pushLater" class="later">나중에</button>
   </div>
 </div>
 
+<div id="toast"></div>
+
 <script>window.SHELL_KIND = 'admin';</script>
-<script src="../config.js"></script>
+<script src="../config.js?v=3"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="../shell.js"></script>
+<script src="../shell.js?v=3"></script>
 </body>
 </html>
