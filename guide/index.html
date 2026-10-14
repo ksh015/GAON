@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>GAON# 앱 설치 방법</title>
+  <link rel="icon" href="../icons/icon-192.png">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <style>
+    :root { --ink:#111; --sub:#666; --line:#e6e6e6; --soft:#f4f4f4; --ok:#2e7d32; --warn:#c62828; }
+    * { box-sizing:border-box; }
+    html, body { margin:0; background:#fff; color:var(--ink); font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; -webkit-text-size-adjust:100%; }
+    .wrap { max-width:520px; margin:0 auto; padding:24px 16px calc(40px + env(safe-area-inset-bottom)); }
+
+    header { text-align:center; margin-bottom:20px; }
+    header img { width:84px; height:84px; border-radius:20px; box-shadow:0 2px 10px rgba(0,0,0,.12); }
+    h1 { font-size:26px; margin:14px 0 6px; letter-spacing:-.5px; }
+    header p { margin:0; color:var(--sub); font-size:16px; font-weight:600; line-height:1.5; }
+
+    .tabs { display:flex; background:var(--soft); border-radius:14px; padding:4px; margin:18px 0 8px; }
+    .tabs button { flex:1; border:0; background:none; height:48px; border-radius:11px; font-size:17px; font-weight:800; color:var(--sub); }
+    .tabs button.on { background:#fff; color:var(--ink); box-shadow:0 1px 4px rgba(0,0,0,.12); }
+    .mine { text-align:center; font-size:14px; color:var(--sub); font-weight:700; min-height:20px; }
+
+    .alert { border-radius:16px; padding:16px; margin:16px 0; font-size:16px; font-weight:700; line-height:1.6; display:none; }
+    .alert.on { display:block; }
+    .alert.red { background:#fdecea; color:var(--warn); }
+    .alert.green { background:#e8f5e9; color:var(--ok); }
+    .alert .btn { margin-top:12px; }
+
+    .step { display:flex; gap:14px; padding:20px 0; border-bottom:1px solid var(--line); }
+    .step:last-child { border-bottom:0; }
+    .num { flex:none; width:40px; height:40px; border-radius:50%; background:var(--ink); color:#fff; font-size:20px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+    .body { flex:1; min-width:0; }
+    .body h2 { font-size:20px; margin:6px 0 8px; line-height:1.4; letter-spacing:-.3px; }
+    .body p { margin:0 0 8px; font-size:16px; line-height:1.65; color:#333; font-weight:500; }
+    .body p.small { font-size:14px; color:var(--sub); }
+    b.key { display:inline-block; background:var(--soft); border:1px solid var(--line); border-radius:8px; padding:0 8px; font-weight:800; }
+
+    .btn { display:block; width:100%; height:56px; line-height:56px; border:0; border-radius:14px; background:var(--ink); color:#fff; font-size:18px; font-weight:800; text-align:center; text-decoration:none; margin-top:10px; }
+    .btn.light { background:var(--soft); color:var(--ink); }
+
+    .pic { margin:10px 0 6px; background:var(--soft); border-radius:14px; padding:14px; display:flex; align-items:center; justify-content:center; gap:10px; font-size:15px; font-weight:800; color:#333; }
+    .pic svg { flex:none; }
+    .menu { width:100%; max-width:280px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,.12); }
+    .menu div { padding:12px 14px; border-bottom:1px solid var(--line); font-size:15px; font-weight:600; color:#999; display:flex; justify-content:space-between; align-items:center; }
+    .menu div:last-child { border-bottom:0; }
+    .menu div.hit { color:var(--ink); font-weight:800; background:#fff8d6; }
+
+    .phone-only { display:none; }
+    .phone-only.on { display:block; }
+
+    .faq { margin-top:28px; }
+    .faq h3 { font-size:20px; margin:0 0 10px; }
+    details { background:var(--soft); border-radius:14px; padding:0 16px; margin-bottom:10px; }
+    summary { list-style:none; padding:16px 0; font-size:16px; font-weight:800; cursor:pointer; display:flex; justify-content:space-between; gap:10px; }
+    summary::-webkit-details-marker { display:none; }
+    summary::after { content:'＋'; color:var(--sub); }
+    details[open] summary::after { content:'－'; }
+    details p { margin:0 0 16px; font-size:15px; line-height:1.65; color:#333; }
+
+    .done { text-align:center; margin-top:24px; padding:20px 16px; border:2px solid var(--ink); border-radius:16px; }
+    .done b { display:block; font-size:20px; margin-bottom:6px; }
+    .done span { font-size:15px; color:#333; line-height:1.6; }
+    #toast { position:fixed; left:50%; bottom:calc(30px + env(safe-area-inset-bottom)); transform:translateX(-50%); background:var(--ink); color:#fff; padding:12px 18px; border-radius:12px; font-size:15px; font-weight:700; opacity:0; transition:opacity .25s; pointer-events:none; white-space:nowrap; }
+    #toast.on { opacity:1; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="../icons/icon-192.png" alt="GAON#">
+    <h1 id="title">GAON# 앱 설치 방법</h1>
+    <p>순서대로 따라 하면 3분이면 끝나요.<br>설치하면 공지·승인 알림이 폰으로 와요.</p>
+  </header>
+
+  <!-- 이미 설치된 앱에서 열었을 때 -->
+  <div class="alert green" id="already">✅ 이미 앱으로 열려 있어요!<br>설치가 끝난 상태예요. 이 창은 닫아도 돼요.</div>
+
+  <!-- 카카오톡 등 앱 안에서 열었을 때 -->
+  <div class="alert red" id="inapp">
+    ⚠️ 지금 <span id="inappName">카카오톡</span> 안에서 열려 있어요.<br>
+    여기서는 설치가 안 돼요. 아래 버튼을 눌러 <span class="ios-word">사파리</span><span class="and-word">크롬</span>로 다시 열어 주세요.
+    <a class="btn" id="openOut" href="#">사파리로 열기</a>
+    <button class="btn light" id="copyLink" type="button">버튼이 안 되면: 링크 복사하기</button>
+  </div>
+
+  <div class="tabs">
+    <button id="tabIos" type="button">🍎 아이폰</button>
+    <button id="tabAnd" type="button">🤖 안드로이드</button>
+  </div>
+  <div class="mine" id="mine"></div>
+
+  <!-- ================= 아이폰 ================= -->
+  <section class="phone-only" id="ios">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="body">
+        <h2>사파리에서 GAON# 열기</h2>
+        <p>아래 검은 버튼을 눌러요.<br>꼭 <b>사파리(Safari)</b>에서 열려야 해요.</p>
+        <a class="btn appLink" href="#">GAON# 열기</a>
+        <p class="small">크롬·카카오톡·네이버 앱 안에서 열리면 안 돼요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">2</div>
+      <div class="body">
+        <h2>공유 버튼 누르기</h2>
+        <p>화면 맨 아래(또는 위)에 있는 <b>공유 버튼</b>을 눌러요.</p>
+        <div class="pic">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9H6.5A1.5 1.5 0 005 10.5v9A1.5 1.5 0 006.5 21h11a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0017.5 9H16"/><path d="M12 15V3M8.5 6.5L12 3l3.5 3.5"/></svg>
+          ← 이렇게 생긴 버튼
+        </div>
+        <p class="small">공유 버튼이 안 보이면 오른쪽 아래 <b class="key">···</b> 를 먼저 누르고, 거기서 <b>공유</b>를 눌러요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">3</div>
+      <div class="body">
+        <h2>"홈 화면에 추가" 누르기</h2>
+        <p>올라온 메뉴를 <b>아래로 내리면</b> 있어요.</p>
+        <div class="pic">
+          <div class="menu">
+            <div>복사 <span>⧉</span></div>
+            <div>즐겨찾기에 추가 <span>☆</span></div>
+            <div class="hit">홈 화면에 추가 <span>⊞</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">4</div>
+      <div class="body">
+        <h2>오른쪽 위 "추가" 누르기</h2>
+        <p>이름이 <b>GAON#</b> 으로 되어 있으면 그대로 <b class="key">추가</b>를 눌러요.</p>
+        <p class="small">"웹 앱으로 열기"가 보이면 <b>켜진 상태(초록색)</b>로 둬요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">5</div>
+      <div class="body">
+        <h2>사파리는 닫고, 홈 화면의 GAON# 아이콘 누르기</h2>
+        <div class="pic"><img src="../icons/icon-192.png" width="56" height="56" style="border-radius:13px" alt=""> ← 홈 화면에 생긴 아이콘</div>
+        <p>앞으로는 <b>항상 이 아이콘으로</b> 들어가요.<br>사파리로 들어가면 알림이 오지 않아요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">6</div>
+      <div class="body">
+        <h2>로그인 → "알림 켜기" → "허용"</h2>
+        <p>내 코드를 넣고 로그인하면 알림 안내창이 떠요.<br><b class="key">알림 켜기</b> 누르고, 나오는 창에서 <b class="key">허용</b>을 눌러요.</p>
+        <p class="small">안내창이 안 뜨면: 왼쪽 위 메뉴 → <b>설정</b> → <b>알림 켜기</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 안드로이드 ================= -->
+  <section class="phone-only" id="and">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="body">
+        <h2>크롬에서 GAON# 열기</h2>
+        <p>아래 검은 버튼을 눌러요.<br>꼭 <b>크롬(Chrome)</b>에서 열려야 해요.</p>
+        <a class="btn appLink" href="#">GAON# 열기</a>
+        <p class="small">삼성 인터넷·카카오톡·네이버 앱 안에서 열리면 안 돼요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">2</div>
+      <div class="body">
+        <h2>오른쪽 위 점 3개 ⋮ 누르기</h2>
+        <div class="pic">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="#111"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          ← 주소창 오른쪽에 있어요
+        </div>
+        <p class="small">화면 아래에 <b>"앱 설치"</b> 안내가 바로 뜨면 그걸 눌러도 돼요. (3번으로)</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">3</div>
+      <div class="body">
+        <h2>"앱 설치" 누르기</h2>
+        <div class="pic">
+          <div class="menu">
+            <div>새 탭 <span>＋</span></div>
+            <div>방문 기록 <span>↺</span></div>
+            <div class="hit">앱 설치 <span>⤓</span></div>
+          </div>
+        </div>
+        <p class="small"><b>"앱 설치"</b>가 없으면 <b>"홈 화면에 추가"</b> → <b>"설치"</b>를 눌러요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">4</div>
+      <div class="body">
+        <h2>"설치" 누르기</h2>
+        <p>작은 창이 뜨면 <b class="key">설치</b>를 눌러요.<br>잠시 후 홈 화면에 아이콘이 생겨요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">5</div>
+      <div class="body">
+        <h2>크롬은 닫고, 홈 화면의 GAON# 아이콘 누르기</h2>
+        <div class="pic"><img src="../icons/icon-192.png" width="56" height="56" style="border-radius:13px" alt=""> ← 홈 화면에 생긴 아이콘</div>
+        <p>앞으로는 <b>항상 이 아이콘으로</b> 들어가요.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">6</div>
+      <div class="body">
+        <h2>로그인 → "알림 켜기" → "허용"</h2>
+        <p>내 코드를 넣고 로그인하면 알림 안내창이 떠요.<br><b class="key">알림 켜기</b> 누르고, 나오는 창에서 <b class="key">허용</b>을 눌러요.</p>
+        <p class="small">안내창이 안 뜨면: 왼쪽 위 메뉴 → <b>설정</b> → <b>알림 켜기</b></p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">7</div>
+      <div class="body">
+        <h2>(삼성폰) 알림이 화면에 뜨게 하기</h2>
+        <p>폰 <b>설정</b> → <b>애플리케이션</b> → <b>GAON#</b> → <b>알림</b>에서<br><b>잠금화면</b>, <b>팝업</b>을 켜 주세요.</p>
+        <p class="small">소리만 나고 화면에 안 보일 때 이걸 하면 돼요.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="done">
+    <b>🎉 끝!</b>
+    <span>홈 화면의 GAON# 아이콘으로 들어가고,<br>알림이 오면 눌러서 바로 확인하면 돼요.</span>
+  </div>
+
+  <div class="faq">
+    <h3>잘 안 될 때</h3>
+    <details>
+      <summary>"허용"을 안 누르고 닫아버렸어요</summary>
+      <p class="ios-txt"><b>아이폰:</b> 폰 설정 → 알림 → GAON# → 알림 허용 켜기.</p>
+      <p class="and-txt"><b>안드로이드:</b> 폰 설정 → 애플리케이션 → GAON# → 알림 → 켜기.<br>(GAON#이 목록에 없으면 Chrome → 알림 → 사이트에서 ksh015.github.io 허용)</p>
+    </details>
+    <details>
+      <summary>아이폰에 "홈 화면에 추가"가 없어요</summary>
+      <p>사파리가 아닌 다른 앱에서 열린 거예요. 위의 <b>GAON# 열기</b> 버튼을 길게 눌러 링크를 복사한 뒤, 사파리 주소창에 붙여넣어 열어 주세요.</p>
+    </details>
+    <details>
+      <summary>알림이 안 와요</summary>
+      <p>① 사파리/크롬이 아니라 <b>홈 화면 아이콘</b>으로 들어갔는지 확인해요.<br>② 앱 → 메뉴 → 설정 → <b>알림 켜기</b>를 한 번 더 눌러요.<br>③ 아이폰은 iOS 16.4 이상이어야 해요. (설정 → 일반 → 소프트웨어 업데이트)<br>④ 폰이 <b>방해금지/집중 모드</b>면 알림이 안 울려요.</p>
+    </details>
+    <details>
+      <summary>로그인할 때마다 코드를 넣어야 해요</summary>
+      <p>로그인 화면에서 <b>코드 저장</b>에 체크한 뒤 로그인하면 다음부터는 코드가 채워져 있어요.</p>
+    </details>
+    <details>
+      <summary>예전에 쓰던 GAON 아이콘은요?</summary>
+      <p>안내가 있을 때까지는 둘 다 써도 돼요. 같은 내용이 보여요. 알림은 새로 설치한 앱에서만 와요.</p>
+    </details>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+(function () {
+  var qs = new URLSearchParams(location.search);
+  var KIND = qs.get('app') === 'admin' ? 'admin' : 'staff';
+  var BASE = new URL('../', location.href).href;            // .../GAON/
+  var APP = BASE + KIND + '/';
+  var GUIDE = location.href.split('#')[0];
+  var ua = navigator.userAgent;
+
+  var isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAnd = /android/i.test(ua);
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  var inapp = /KAKAOTALK/i.test(ua) ? '카카오톡'
+    : /NAVER\(inapp|NAVER/i.test(ua) ? '네이버 앱'
+    : /Instagram/i.test(ua) ? '인스타그램'
+    : /FBAN|FBAV/i.test(ua) ? '페이스북'
+    : /Line\//i.test(ua) ? '라인'
+    : /; wv\)/.test(ua) ? '다른 앱' : '';
+  var iosOther = isIOS && /CriOS|FxiOS|EdgiOS|Whale/i.test(ua); // 아이폰 크롬 등
+  var andSamsung = isAnd && /SamsungBrowser/i.test(ua);
+
+  function $(id) { return document.getElementById(id); }
+  function toast(t) { var el = $('toast'); el.textContent = t; el.classList.add('on'); setTimeout(function () { el.classList.remove('on'); }, 2200); }
+
+  if (KIND === 'admin') $('title').textContent = 'GAON#(대표) 앱 설치 방법';
+
+  // 앱 열기 버튼
+  var andChrome = 'intent://' + APP.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+  Array.prototype.forEach.call(document.querySelectorAll('.appLink'), function (a) {
+    if (isAnd && (andSamsung || inapp)) a.href = andChrome;
+    else if (isIOS && /KAKAOTALK/i.test(ua)) a.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(APP);
+    else { a.href = APP; a.target = '_blank'; }
+  });
+
+  // 탭
+  function show(which) {
+    $('tabIos').classList.toggle('on', which === 'ios');
+    $('tabAnd').classList.toggle('on', which === 'and');
+    $('ios').classList.toggle('on', which === 'ios');
+    $('and').classList.toggle('on', which === 'and');
+    Array.prototype.forEach.call(document.querySelectorAll('.ios-txt'), function (e) { e.style.display = which === 'ios' ? '' : 'none'; });
+    Array.prototype.forEach.call(document.querySelectorAll('.and-txt'), function (e) { e.style.display = which === 'and' ? '' : 'none'; });
+  }
+  $('tabIos').onclick = function () { show('ios'); };
+  $('tabAnd').onclick = function () { show('and'); };
+  if (isIOS) { show('ios'); $('mine').textContent = '내 폰: 아이폰 👆'; }
+  else if (isAnd) { show('and'); $('mine').textContent = '내 폰: 안드로이드 👆'; }
+  else { show('ios'); $('mine').textContent = '내 폰에 맞는 쪽을 눌러 주세요'; }
+
+  // 이미 설치된 앱에서 연 경우
+  if (standalone) $('already').classList.add('on');
+
+  // 카카오톡 등 앱 안에서 열린 경우 → 바깥 브라우저로
+  if (!standalone && (inapp || iosOther || andSamsung)) {
+    $('inapp').classList.add('on');
+    $('inappName').textContent = inapp || (iosOther ? '사파리가 아닌 브라우저' : '삼성 인터넷');
+    Array.prototype.forEach.call(document.querySelectorAll('.ios-word'), function (e) { e.style.display = isIOS ? '' : 'none'; });
+    Array.prototype.forEach.call(document.querySelectorAll('.and-word'), function (e) { e.style.display = isIOS ? 'none' : ''; });
+    var out = $('openOut');
+    if (isIOS) {
+      out.textContent = '사파리로 열기';
+      out.href = /KAKAOTALK/i.test(ua) ? 'kakaotalk://web/openExternal?url=' + encodeURIComponent(GUIDE) : 'x-safari-' + GUIDE;
+    } else {
+      out.textContent = '크롬으로 열기';
+      out.href = 'intent://' + GUIDE.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
+    }
+  }
+
+  $('copyLink').onclick = function () {
+    var done = function () { toast('복사됐어요. ' + (isIOS ? '사파리' : '크롬') + ' 주소창에 붙여넣어 주세요'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(GUIDE).then(done, function () { prompt('이 링크를 복사해 주세요', GUIDE); });
+    } else { prompt('이 링크를 복사해 주세요', GUIDE); }
+  };
+})();
+</script>
+</body>
+</html>
