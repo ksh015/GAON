@@ -1,6 +1,6 @@
 // ===== GAON 시험용 껍데기 설정 =====
 // 웹앱 주소가 바뀌면 이 파일만 고치면 됩니다.
-window.GAON_CONFIG = {
+self.GAON_CONFIG = {
   // 직원앱 / 대표앱 웹앱 주소 (Apps Script 배포 주소)
   staffUrl: 'https://script.google.com/macros/s/AKfycbytkzogOb7HlhMcWO9xDT7Gdwqx6OTfcYBWO7oYJhfBmQ8jZnugbyo_PNi-Vy2v6Dbw/exec',
   adminUrl: 'https://script.google.com/macros/s/AKfycbytkzogOb7HlhMcWO9xDT7Gdwqx6OTfcYBWO7oYJhfBmQ8jZnugbyo_PNi-Vy2v6Dbw/exec?page=admin',
