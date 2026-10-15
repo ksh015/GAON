@@ -34,8 +34,11 @@
   // 푸시 알림을 눌러서 열린 경우 (?n=알림번호)
   function takePending(href) {
     try {
-      var n = Number(new URL(href, location.href).searchParams.get('n') || 0);
+      var sp = new URL(href, location.href).searchParams;
+      var n = Number(sp.get('n') || 0);
       if (n) PENDING = n;
+      var c = sp.get('close');            // 마감 푸시: 지점|날짜
+      if (c) PENDING = 'close:' + c;
     } catch (e) {}
   }
   takePending(location.href);
