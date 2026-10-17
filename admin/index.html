@@ -12,13 +12,14 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
-<link rel="stylesheet" href="../shell.css?v=9">
+<link rel="stylesheet" href="../shell.css?v=10">
+<link rel="preload" as="image" href="../icons/logo.png">
 </head>
 <body>
 <iframe id="app" title="GAON#(대표)" allow="camera; microphone; clipboard-write; autoplay; fullscreen; screen-wake-lock"></iframe>
 
 <div id="splash">
-  <video id="splashVid" src="../icons/logo.mp4?v=9" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
+  <video id="splashVid" src="../icons/logo.mp4?v=10" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
   <div id="splashMsg"></div>
 </div>
 <script>
@@ -34,7 +35,7 @@
     }
     v.addEventListener('ended', finish);
     v.addEventListener('error', finish);
-    setTimeout(finish, 8000); // 영상이 멈추거나 늦게 받아져도 8초 뒤에는 넘어감
+    setTimeout(finish, 10000); // 영상이 멈추거나 늦게 받아져도 10초 뒤에는 넘어감
     function play() { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(finish); }
     window.splashWait = function (done) { if (ended) done(); else waiters.push(done); };
     play();
@@ -63,9 +64,9 @@
 <div id="toast"></div>
 
 <script>window.SHELL_KIND = 'admin';</script>
-<script src="../config.js?v=9"></script>
+<script src="../config.js?v=10"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="../shell.js?v=9"></script>
+<script src="../shell.js?v=10"></script>
 </body>
 </html>
