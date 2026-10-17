@@ -12,22 +12,35 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
-<link rel="stylesheet" href="../shell.css?v=6">
+<link rel="stylesheet" href="../shell.css?v=8">
 </head>
 <body>
 <iframe id="app" title="GAON#" allow="camera; microphone; clipboard-write; autoplay; fullscreen; screen-wake-lock"></iframe>
 
 <div id="splash">
-  <video id="splashVid" src="../icons/logo.mp4" poster="../icons/logo-poster.jpg" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
+  <video id="splashVid" src="../icons/logo.mp4" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
   <div id="splashMsg"></div>
 </div>
 <script>
+  // 로고 영상: 처음 실행할 때는 영상이 끝까지 나온 뒤 로그인 화면으로 넘어감
   (function () {
     var v = document.getElementById('splashVid'), sp = document.getElementById('splash');
-    function play() { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    var ended = false, waiters = [];
+    function finish() {
+      if (ended) return;
+      ended = true;
+      var w = waiters; waiters = [];
+      w.forEach(function (f) { f(); });
+    }
+    v.addEventListener('ended', finish);
+    v.addEventListener('error', finish);
+    setTimeout(finish, 8000); // 영상이 멈추거나 늦게 받아져도 8초 뒤에는 넘어감
+    function play() { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(finish); }
+    window.splashWait = function (done) { if (ended) done(); else waiters.push(done); };
     play();
     new MutationObserver(function () {
-      if (sp.classList.contains('hide')) v.pause(); else play();
+      if (sp.classList.contains('hide')) v.pause();
+      else { try { v.currentTime = 0; } catch (e) {} play(); }
     }).observe(sp, { attributes: true, attributeFilter: ['class'] });
   })();
 </script>
@@ -50,9 +63,9 @@
 <div id="toast"></div>
 
 <script>window.SHELL_KIND = 'staff';</script>
-<script src="../config.js?v=6"></script>
+<script src="../config.js?v=8"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="../shell.js?v=6"></script>
+<script src="../shell.js?v=8"></script>
 </body>
 </html>
