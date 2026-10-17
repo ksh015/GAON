@@ -12,16 +12,25 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
-<link rel="stylesheet" href="../shell.css?v=4">
+<link rel="stylesheet" href="../shell.css?v=6">
 </head>
 <body>
 <iframe id="app" title="GAON#" allow="camera; microphone; clipboard-write; autoplay; fullscreen; screen-wake-lock"></iframe>
 
 <div id="splash">
-  <img src="../icons/icon-512.png" alt="GAON#">
-  <div class="spin"></div>
-  <div id="splashMsg">불러오는 중...</div>
+  <video id="splashVid" src="../icons/logo.mp4" poster="../icons/logo-poster.jpg" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
+  <div id="splashMsg"></div>
 </div>
+<script>
+  (function () {
+    var v = document.getElementById('splashVid'), sp = document.getElementById('splash');
+    function play() { v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    play();
+    new MutationObserver(function () {
+      if (sp.classList.contains('hide')) v.pause(); else play();
+    }).observe(sp, { attributes: true, attributeFilter: ['class'] });
+  })();
+</script>
 
 <div id="iosTip">
   알림을 받으려면 아래 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b>를 누르고, 홈 화면의 <b>GAON#</b> 아이콘으로 열어 주세요.
@@ -41,9 +50,9 @@
 <div id="toast"></div>
 
 <script>window.SHELL_KIND = 'staff';</script>
-<script src="../config.js?v=4"></script>
+<script src="../config.js?v=6"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
-<script src="../shell.js?v=4"></script>
+<script src="../shell.js?v=6"></script>
 </body>
 </html>
