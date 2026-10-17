@@ -1,9 +1,10 @@
-html, body { margin:0; padding:0; height:100%; background:#fff; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color:#111; }
+html, body { margin:0; padding:0; height:100%; background:#fff; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color:#111; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
 #app { position:fixed; inset:0; width:100%; height:100%; border:0; background:#fff; }
 
 #splash { position:fixed; inset:0; z-index:10; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .3s; padding:24px; box-sizing:border-box; text-align:center; }
 #splash.hide { opacity:0; pointer-events:none; }
-#splash img { width:180px; height:180px; object-fit:contain; }
+#splash video { width:min(80vw, 360px); height:min(80vw, 360px); object-fit:contain; background:#fff; pointer-events:none; }
+#splashMsg:empty { display:none; }
 #splashMsg { color:#888; font-size:14px; font-weight:700; }
 .spin { width:28px; height:28px; border:3px solid #e5e5e5; border-top-color:#111; border-radius:50%; animation:spin .8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
