@@ -26,7 +26,10 @@
   // ---------- 1. 웹앱 표시 ----------
   var frame = $('app');
   function loadApp() { $('splash').classList.remove('hide'); frame.src = APP_URL; }
-  frame.addEventListener('load', function () { $('splash').classList.add('hide'); });
+  function hideSplash() { $('splash').classList.add('hide'); }
+  frame.addEventListener('load', function () {
+    if (window.splashWait) window.splashWait(hideSplash); else hideSplash();
+  });
   setTimeout(function () {
     if (!$('splash').classList.contains('hide')) $('splashMsg').textContent = '불러오는 시간이 길어지고 있어요. 인터넷 연결을 확인해 주세요.';
   }, 15000);

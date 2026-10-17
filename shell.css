@@ -3,7 +3,7 @@ html, body { margin:0; padding:0; height:100%; background:#fff; overflow:hidden;
 
 #splash { position:fixed; inset:0; z-index:10; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .3s; padding:24px; box-sizing:border-box; text-align:center; }
 #splash.hide { opacity:0; pointer-events:none; }
-#splash video { width:min(80vw, 360px); height:min(80vw, 360px); object-fit:contain; background:#fff; pointer-events:none; }
+#splash video { width:min(70vw, 300px); height:min(70vw, 300px); object-fit:contain; background:#fff; pointer-events:none; }
 #splashMsg:empty { display:none; }
 #splashMsg { color:#888; font-size:14px; font-weight:700; }
 .spin { width:28px; height:28px; border:3px solid #e5e5e5; border-top-color:#111; border-radius:50%; animation:spin .8s linear infinite; }
