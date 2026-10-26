@@ -26,7 +26,7 @@
   // ---------- 1. 웹앱 표시 ----------
   var frame = $('app');
   function loadApp() { $('splash').classList.remove('hide'); frame.src = APP_URL; }
-  function hideSplash() { $('splash').classList.add('hide'); }
+  function hideSplash() { $('splash').classList.add('hide'); sendEvent('splash', true); } // 앱에 '영상 걷힘' 알림 → 로고 출발
   frame.addEventListener('load', function () {
     if (window.splashWait) window.splashWait(hideSplash); else hideSplash();
   });
@@ -73,6 +73,7 @@
     else if (m.gaon === 'token') reply.value = TOKEN || store('token') || '';
     else if (m.gaon === 'login') { reply.value = true; afterLogin(); }
     else if (m.gaon === 'askPush') { reply.value = true; openSheet(true); }
+    else if (m.gaon === 'splash') reply.value = $('splash').classList.contains('hide'); // 지금 영상이 걷혔는지
     else return;
     try { e.source.postMessage(reply, e.origin); } catch (err) {}
   });
