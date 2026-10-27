@@ -14,30 +14,21 @@
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
 <link rel="stylesheet" href="../shell.css?v=10">
 <link rel="preload" as="image" href="../icons/logo.png">
-<link rel="preload" as="image" href="../icons/logo-start.png">
-<style>
-  /* 시작 그림: 영상에서 로고가 다 나타난 장면(1.8초). 영상과 같은 자리·크기로 먼저 보여 주고, 영상이 그 장면에 오면 사라짐 */
-  #splash #splashImg { position:absolute; left:50%; top:calc(50vh - 37px); top:calc(50dvh - 37px); transform:translate(-50%, -50%); width:min(360px, calc((100vw - 32px) * 0.86)); height:min(360px, calc((100vw - 32px) * 0.86)); object-fit:contain; background:#fff; pointer-events:none; border:0; outline:0; -webkit-mask-image:linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%); -webkit-mask-composite:source-in; mask-image:linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%); mask-composite:intersect; z-index:1; transition:opacity .15s; }
-  #splash #splashImg.off { opacity:0; }
-</style>
 </head>
 <body>
 <iframe id="app" title="GAON#(대표)" allow="camera; microphone; clipboard-write; autoplay; fullscreen; screen-wake-lock"></iframe>
 
 <div id="splash">
-  <img id="splashImg" src="../icons/logo-start.png" alt="">
-  <video id="splashVid" src="../icons/logo.mp4?v=11#t=1.8" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
+  <video id="splashVid" src="../icons/logo.mp4?v=11#t=0.5" autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture></video>
   <div id="splashMsg"></div>
 </div>
 <script>
   // 로고 영상: 처음 실행할 때는 영상이 끝까지 나온 뒤 로그인 화면으로 넘어감
-  // 앞부분(빈 화면 → 로고가 흐리게 나타남)은 건너뛰고 1.8초부터: 휴대폰 시작 화면 로고 → 같은 로고 그림 → 반짝임 → 문구
+  // 맨 앞 빈 화면 0.5초는 건너뛰고, 로고가 스르륵 나타나는 부분부터 재생
   (function () {
-    var v = document.getElementById('splashVid'), sp = document.getElementById('splash'), img = document.getElementById('splashImg');
-    var START = 1.8;
-    function toStart() { try { if (v.currentTime < START - 0.05) v.currentTime = START; } catch (e) {} }
-    v.addEventListener('loadedmetadata', toStart);
-    v.addEventListener('timeupdate', function () { if (!v.paused && v.currentTime >= START - 0.02) img.classList.add('off'); });
+    var v = document.getElementById('splashVid'), sp = document.getElementById('splash');
+    var START = 0.5;
+    v.addEventListener('loadedmetadata', function () { try { if (v.currentTime < START - 0.05) v.currentTime = START; } catch (e) {} });
     var ended = false, waiters = [];
     function finish() {
       if (ended) return;
@@ -53,7 +44,7 @@
     play();
     new MutationObserver(function () {
       if (sp.classList.contains('hide')) v.pause();
-      else { img.classList.remove('off'); try { v.currentTime = START; } catch (e) {} play(); }
+      else { try { v.currentTime = START; } catch (e) {} play(); }
     }).observe(sp, { attributes: true, attributeFilter: ['class'] });
   })();
 </script>
