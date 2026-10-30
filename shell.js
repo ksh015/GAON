@@ -94,21 +94,33 @@
   }
 
   // ---------- 안드로이드 뒤로 버튼: 앱을 닫지 않고 앱 안에서 뒤로 ----------
-  var BACK_ON = false, BACK_WAIT = null, BACK_ARM = 0;
+  // 뒤로 칸(trap)은 처음 한 번만 만들고, 뒤로를 누를 때마다 '앞으로'로 그 칸에 다시 돌아감.
+  // (Chrome은 사람이 화면을 만지지 않은 사이에 새로 만든 칸을 건너뛰기 때문에 매번 새로 만들면 두 번째 뒤로에서 앱이 꺼짐)
+  var BACK_ON = false, BACK_WAIT = null, BACK_ARM = 0, BACK_HOLD = null;
+  function onTrap() { return !!(history.state && history.state.gaonBack); }
   function backTrap() { try { history.pushState({ gaonBack: 1 }, ''); } catch (e) {} }
-  function backOn() { if (BACK_ON) return; BACK_ON = true; backTrap(); }
+  function backReturn() { // 뒤로 칸으로 돌아가기: 앞으로 → 안 되면(칸이 지워졌으면) 새로 만들기
+    if (onTrap()) return;
+    try { history.forward(); } catch (e) {}
+    setTimeout(function () { if (!onTrap()) backTrap(); }, 400);
+  }
+  function backOn() { if (BACK_ON) return; BACK_ON = true; if (!onTrap()) backTrap(); }
   window.addEventListener('popstate', function () {
     if (!BACK_ON || !APP_WIN) return;
+    if (onTrap()) return; // '앞으로'로 뒤로 칸에 돌아온 것
+    clearTimeout(BACK_HOLD); BACK_ARM = 0;
     clearTimeout(BACK_WAIT);
-    BACK_WAIT = setTimeout(function () { backResult(true); }, 800); // 앱이 답이 없으면 홈으로 봄
+    BACK_WAIT = setTimeout(function () { backResult(false); }, 1500); // 앱 답이 늦으면 앱 안에서 뒤로 간 걸로 봄
     sendEvent('back', 1);
   });
   function backResult(home) {
     if (!BACK_WAIT) return;
     clearTimeout(BACK_WAIT); BACK_WAIT = null;
-    if (!home) { backTrap(); return; }
+    if (!home) { backReturn(); return; }
+    // 홈: 안내만 하고 2초 동안 뒤로 칸 밖에서 기다림 → 그 사이 한 번 더 누르면 앱이 닫힘
     BACK_ARM = Date.now(); toast('뒤로 버튼을 한 번 더 누르면 앱이 닫혀요');
-    setTimeout(function () { if (Date.now() - BACK_ARM >= 2000) backTrap(); }, 2000);
+    clearTimeout(BACK_HOLD);
+    BACK_HOLD = setTimeout(function () { BACK_ARM = 0; backReturn(); }, 2000);
   }
 
   // ---------- 3. 푸시 ----------
