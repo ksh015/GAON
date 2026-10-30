@@ -93,55 +93,25 @@
     }
   }
 
-  // ---------- 안드로이드 뒤로 버튼: 앱을 닫지 않고 앱 안에서 뒤로 ----------
-  // 기본: 뒤로 칸(trap)을 사람이 화면을 처음 만진 뒤 한 번만 만들고, 뒤로를 누르면 '앞으로'로 그 칸에 돌아감
-  // 더해서: Chrome이 CloseWatcher(뒤로 신호만 받기)를 지원하면 그것도 걸어 둠 → 되는 폰은 칸 이동 없이(깜박임 없이) 처리
-  var BACK_ON = false, BACK_WAIT = null, BACK_ARM = 0, BACK_HOLD = null, CW = null, IGNORE_POP = 0;
-  var HAS_CW = typeof window.CloseWatcher === 'function';
+  // ---------- 안드로이드 뒤로 버튼 ----------
+  // 보통은 앱 화면이 직접 처리함(누르는 순간 뒤로 칸을 만듦). 앱 화면에서 칸을 못 만들 때만 앱이 'backReady'로 맡김 → 여기서 처리
+  var BACK_ON = false, BACK_WAIT = null, BACK_HOLD = null;
   function onTrap() { return !!(history.state && history.state.gaonBack); }
   function backTrap() { try { history.pushState({ gaonBack: 1 }, ''); } catch (e) {} }
-  function whenActive(fn) { // 화면을 한 번이라도 만진 뒤에 (만지기 전에 만든 칸은 Chrome이 건너뜀)
-    var ua = navigator.userActivation;
-    if (!ua || ua.hasBeenActive) { fn(); return; }
-    var t = setInterval(function () { if (ua.hasBeenActive) { clearInterval(t); fn(); } }, 300);
-  }
-  function cwArm() {
-    if (!HAS_CW || CW) return;
-    try { CW = new CloseWatcher(); CW.onclose = function () { CW = null; backPressed('cw'); }; } catch (e) { CW = null; }
-  }
-  function trapArm() {
-    if (onTrap()) return;
-    try { history.forward(); } catch (e) {}
-    setTimeout(function () { if (!onTrap()) backTrap(); }, 400);
-  }
-  function backReturn() { cwArm(); trapArm(); } // 다음 뒤로 버튼도 앱이 받을 수 있게
-  function backOn() {
-    if (BACK_ON) return; BACK_ON = true;
-    whenActive(function () { if (!onTrap()) backTrap(); cwArm(); });
-  }
-  function backPressed(src) {
-    if (!APP_WIN) { backReturn(); return; }
-    clearTimeout(BACK_HOLD); BACK_ARM = 0;
-    clearTimeout(BACK_WAIT);
-    BACK_WAIT = setTimeout(function () { backResult(false); }, 1500); // 앱 답이 늦으면 앱 안에서 뒤로 간 걸로 봄
-    sendEvent('back', 1);
-  }
+  function backReturn() { if (onTrap()) return; try { history.forward(); } catch (e) {} setTimeout(function () { if (!onTrap()) backTrap(); }, 400); }
+  function backOn() { if (BACK_ON) return; BACK_ON = true; if (!onTrap()) backTrap(); }
   window.addEventListener('popstate', function () {
-    if (!BACK_ON) return;
-    if (IGNORE_POP) { IGNORE_POP = 0; return; } // 홈에서 일부러 칸 밖으로 나온 것
-    if (onTrap()) return; // '앞으로'로 뒤로 칸에 돌아온 것
-    backPressed('hist');
+    if (!BACK_ON || !APP_WIN || onTrap()) return;
+    clearTimeout(BACK_HOLD); clearTimeout(BACK_WAIT);
+    BACK_WAIT = setTimeout(function () { backResult(false); }, 1500);
+    sendEvent('back', 1);
   });
   function backResult(home) {
     if (!BACK_WAIT) return;
     clearTimeout(BACK_WAIT); BACK_WAIT = null;
     if (!home) { backReturn(); return; }
-    // 홈: 안내 → 2초 동안 뒤로를 받지 않음(칸 밖 · 신호 끔) → 그 사이 한 번 더 누르면 앱이 닫힘
-    BACK_ARM = Date.now(); toast('뒤로 버튼을 한 번 더 누르면 앱이 닫혀요');
-    if (CW) { try { CW.onclose = null; CW.destroy(); } catch (e) {} CW = null; }
-    if (onTrap()) { IGNORE_POP = 1; try { history.back(); } catch (e) { IGNORE_POP = 0; } }
-    clearTimeout(BACK_HOLD);
-    BACK_HOLD = setTimeout(function () { BACK_ARM = 0; backReturn(); }, 2000);
+    toast('뒤로 버튼을 한 번 더 누르면 앱이 닫혀요');
+    clearTimeout(BACK_HOLD); BACK_HOLD = setTimeout(backReturn, 2000);
   }
 
   // ---------- 3. 푸시 ----------
