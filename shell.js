@@ -73,6 +73,8 @@
     else if (m.gaon === 'token') reply.value = TOKEN || store('token') || '';
     else if (m.gaon === 'login') { reply.value = true; afterLogin(); }
     else if (m.gaon === 'askPush') { reply.value = true; openSheet(true); }
+    else if (m.gaon === 'backReady') { reply.value = true; backOn(); }
+    else if (m.gaon === 'back') { reply.value = true; backResult(!!m.home); }
     else if (m.gaon === 'splash') reply.value = $('splash').classList.contains('hide'); // 지금 영상이 걷혔는지
     else return;
     try { e.source.postMessage(reply, e.origin); } catch (err) {}
@@ -89,6 +91,24 @@
       var until = Number(store('snooze') || 0);
       if (Date.now() > until) openSheet(false);
     }
+  }
+
+  // ---------- 안드로이드 뒤로 버튼: 앱을 닫지 않고 앱 안에서 뒤로 ----------
+  var BACK_ON = false, BACK_WAIT = null, BACK_ARM = 0;
+  function backTrap() { try { history.pushState({ gaonBack: 1 }, ''); } catch (e) {} }
+  function backOn() { if (BACK_ON) return; BACK_ON = true; backTrap(); }
+  window.addEventListener('popstate', function () {
+    if (!BACK_ON || !APP_WIN) return;
+    clearTimeout(BACK_WAIT);
+    BACK_WAIT = setTimeout(function () { backResult(true); }, 800); // 앱이 답이 없으면 홈으로 봄
+    sendEvent('back', 1);
+  });
+  function backResult(home) {
+    if (!BACK_WAIT) return;
+    clearTimeout(BACK_WAIT); BACK_WAIT = null;
+    if (!home) { backTrap(); return; }
+    BACK_ARM = Date.now(); toast('뒤로 버튼을 한 번 더 누르면 앱이 닫혀요');
+    setTimeout(function () { if (Date.now() - BACK_ARM >= 2000) backTrap(); }, 2000);
   }
 
   // ---------- 3. 푸시 ----------
