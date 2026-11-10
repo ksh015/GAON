@@ -1,5 +1,5 @@
-html, body { margin:0; padding:0; height:100%; background:#fff; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color:#111; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
-#app { position:fixed; inset:0; width:100%; height:100%; border:0; background:#fff; }
+html, body { margin:0; padding:0; height:100%; background:#fff; overflow:hidden; overscroll-behavior:none; font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color:#111; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+#app { position:fixed; top:0; left:0; right:0; width:100%; height:100%; border:0; background:#fff; } /* 키보드가 나오면 shell.js가 높이를 키보드 위까지로 줄임 */
 
 #splash { position:fixed; inset:0; z-index:10; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; transition:opacity .3s; padding:24px; box-sizing:border-box; text-align:center; }
 #splash.hide { opacity:0; pointer-events:none; }

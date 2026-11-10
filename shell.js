@@ -52,6 +52,37 @@
   if (isIOS() && !isStandalone() && store('hideIosTip') !== '1') $('iosTip').classList.add('on');
   $('iosTipClose').onclick = function () { $('iosTip').classList.remove('on'); store('hideIosTip', '1'); };
 
+  // ---------- 키보드: 앱 화면이 키보드에 가리거나 통째로 밀려 올라가지 않게 ----------
+  // 안드로이드: viewport의 interactive-widget=resizes-content로 화면 자체가 줄어듦 (이건 그대로 둠)
+  // 아이폰 · 설정을 모르는 브라우저: 키보드가 화면을 덮고 페이지를 밀어 올림 → 밀림은 되돌리고, 앱 높이를 보이는 칸(키보드 위)까지로 줄임
+  // 키보드가 움직이는 동안(0.7초) 매 순간 다시 재서 앱 화면이 키보드를 따라 움직이게 함
+  (function () {
+    // 아이폰: 글씨가 작은 입력칸을 누르면 화면이 확대되는 것 막기 (아이폰은 두 손가락 확대는 그대로 됨 · 안드로이드는 안 건드림)
+    var IOS = /iP(hone|ad|od)/.test(navigator.platform || '') || (/Mac/.test(navigator.platform || '') && navigator.maxTouchPoints > 1) || /iPhone|iPad|iPod/.test(navigator.userAgent || '');
+    if (IOS) { var vm = document.querySelector('meta[name=viewport]'); if (vm && !/maximum-scale/.test(vm.content)) vm.content = vm.content.replace('initial-scale=1', 'initial-scale=1, maximum-scale=1'); }
+    var vv = window.visualViewport; if (!vv || !frame) return;
+    var raf = 0, until = 0, lastH = -1, lastT = -1;
+    function fix() {
+      if (window.scrollX || window.scrollY) window.scrollTo(0, 0); // 페이지 밀림 되돌리기
+      var se = document.scrollingElement; if (se && se.scrollTop) se.scrollTop = 0;
+      var full = window.innerHeight, h = Math.round(vv.height), t = Math.max(0, Math.round(vv.offsetTop));
+      var kb = full - h > 80 && !(vv.scale > 1.01); // 키보드 · 날짜 휠이 화면을 덮고 있음 (두 손가락으로 확대한 건 제외)
+      var H = kb ? h : -1, T = kb ? t : 0;
+      if (H !== lastH) { frame.style.height = kb ? h + 'px' : ''; lastH = H; }
+      if (T !== lastT) { frame.style.top = T ? T + 'px' : ''; lastT = T; }
+      document.documentElement.classList.toggle('kb', kb);
+    }
+    function loop() { fix(); if (performance.now() < until) raf = requestAnimationFrame(loop); else raf = 0; }
+    function burst() { until = performance.now() + 700; if (!raf) raf = requestAnimationFrame(loop); }
+    vv.addEventListener('resize', burst);
+    vv.addEventListener('scroll', burst);
+    window.addEventListener('resize', burst);
+    window.addEventListener('scroll', function () { if (window.scrollY) { window.scrollTo(0, 0); burst(); } }, { passive: true });
+    window.addEventListener('orientationchange', function () { setTimeout(burst, 300); });
+    document.addEventListener('focusin', burst, true); // 앱 화면을 누를 때마다 (키보드가 올라오기 시작)
+    fix();
+  })();
+
   // ---------- 2. 웹앱과 주고받기 ----------
   function sendEvent(type, value) {
     if (!APP_WIN) return;
